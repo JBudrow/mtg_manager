@@ -1,0 +1,11 @@
+%h3 login
+%br
+%form{action: '/login', method: 'post'}
+  %div.form-group 
+    %label{for: 'email'} Email 
+    %input.form-control#email{type: 'email', name: 'email', placeholder: 'Enter email'}
+    %small.form-text.text-muted#email_help We'll never share your email with anyone else 
+  %div.form-group 
+    %label{for: 'password'} Password 
+    %input.form-control#password{type: 'password', name: 'password', placeholder: 'Password'} 
+  %button.btn.btn-primary Submit

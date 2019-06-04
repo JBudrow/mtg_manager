@@ -1,0 +1,53 @@
+.col-sm-12
+  %nav.nav.navbar-light{style: 'background: linear-gradient(to left, transparent, #F7F7F7); border-radius: 6%; padding: inherit;'}
+    %span.navbar-brand{style: 'font-size: small; color: grey;'}="LATEST RELEASE (#{@latest_promos.first['released_at']})"
+  %br
+  .row.justify-content-center
+    -@latest_promos.each do |card| 
+      .card-deck
+        -# `height` property sides with .cody-body temporarily 
+        -# unless a .card-body is needed
+        .card{style: 'margin: 0 20px 15px 20px; height: 26.75em;'}
+          %a{href: "/sets/#{card['set']}/card/#{card['collector_number']}", style: 'text-align: center;'}
+            %img.img-responsive{src: card['image_uris']['normal'], style: 'max-width: 17em;'}
+          -# .card-body 
+          -#   %form{style:'padding:1.5px;'}
+              -# %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{card['prices']['usd']}"
+              -# %button.btn.btn-outline-secondary.btn-sm.disabled{onClick: 'return false'}=card.price
+          .card-footer
+            %small.text-muted SOURCE: MARK HAMILL
+  %br 
+  %div.container{style: 'padding-top:5em;'}
+    %table.table.table-striped.table-hover
+      %thead 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} NAME 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} PARENT BLOCK
+        %th{scope: 'col', style: 'font-size: small; border: none;'} CARDS 
+        -# %th{scope: 'col', style: 'font-size: small; border: none;'} PRINTABLE
+        %th{scope: 'col', style: 'font-size: small; border: none;'} VALUE
+        %th{scope: 'col', style: 'font-size: small; border: none;'} QUANTITY
+        %th{scope: 'col', style: 'font-size: small; border: none;'} RELEASE
+      %tbody
+        -@promos.each do |card|
+          %tr{onclick: "window.location='/sets/#{card['set']}/card/#{card['collector_number']}", style: 'cursor: pointer;'}  
+            %td
+              %span=card['name']
+              %span{style: 'font-size: smaller; color: grey;'}="(#{card['code'].upcase})"
+            -if card['parent_set_code']
+              %td{style: 'color:#000'}=card['parent_set_code'].upcase
+            -else 
+              %td 
+            %td=card['card_count']
+            %td=set_currency(card)
+            -if current_user 
+              -# todo add method in application helper
+              -user_card = Card.last(user_id: current_user.id, scryfall_id: card['id'])
+              -if user_card
+                user_card.quantity 
+              -else 
+                %td
+            -else 
+              %td
+            %td=card['released_at']
+    %div.pagination{style: 'float:right; margin-top:10px;'}
+      =will_paginate(@promos, :container => false)

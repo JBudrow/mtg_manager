@@ -1,0 +1,42 @@
+=haml :'/shared/filter'
+.col-xl-12.col-lg-12.col-md-12.col-sm-12{style: 'padding: 3em;'}
+  .row
+    .card-deck
+      -@cards.first(10).each do |card|
+        .col-xl-3.col-lg-3.col-md-4.col-sm-4{style: 'text-align: center;'}
+          %a{id: "#{scrollspy_card_color(card)}", href: "/sets/#{card['set']}/card/#{card['collector_number']}"}
+            %img.img-responsive.card-img-top{src: card['image_uris']['normal'], style: 'border-radius: 4%;'}
+              .card-body{style: 'padding: inherit; display: inline-flex;'}
+                -unless current_user 
+                  %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} -
+                  %span{style: 'padding-right: 1px;'}
+                  %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} +
+                  %span{style: 'padding-right: 1px;'}
+                  %button.btn.btn-outline-secondary.btn-sm.disabled 0 
+                  %span{style: 'padding-right: 1px;'}
+                  %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} DESTROY
+                  %span{style: 'padding-right: 1px;'}
+                  -unless card['prices']['usd'].to_i.zero?
+                    %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{card['prices']['usd']}"
+                  -else 
+                    %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}='$0.00'
+                -else
+                  %form{method: 'post', action: '/decrement_counter', style: 'padding:1.5px'}
+                    %input#decrement.button.button.btn.btn-secondary.btn-sm.btn-outline-danger{type: 'submit', 
+                                                                                               scryfall_id: "#{card['id']}", 
+                                                                                               quantity: "#{quantity_counter(card)}", 
+                                                                                               value: '-'}
+                  %form{method: 'post', action: '/increment_counter', style: 'padding:1.5px;'}
+                    %input#increment.button.button.btn.btn-secondary.btn-sm.btn-outline-success{type: 'submit',
+                                                                                                scryfall_id: "#{card['id']}", 
+                                                                                                quantity: "#{quantity_counter(card)}", 
+                                                                                                price: "#{card['prices']['usd']}",
+                                                                                                value: '+'}
+                  %form{style: 'padding:1.5px;'}  
+                    %button.btn.btn-outline-secondary.btn-sm.disabled{id: "#{card['id']}"}=quantity_counter(card)
+                  %form{method: 'delete', action: '/delete', style: 'padding:1.5px;'}
+                    %input#destroy.button.button.btn.btn-secondary.btn-sm.btn-danger{type: 'submit', scryfall_id: "#{card['id']}", value: 'DESTROY'}
+                  %form.asdf{style:'padding:1.5px;'}
+                    -# %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{card['prices']['usd']}"
+                    -# %button.btn.btn-outline-secondary.btn-sm.disabled{onClick: 'return false'}="$#{indiv_currency(current_user.id, card['id'])}"
+                    %button.btn.btn-outline-secondary.btn-sm.disabled{onClick: 'return false'}=format_price(current_user, card)

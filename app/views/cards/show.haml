@@ -1,0 +1,92 @@
+%br
+%br
+.container
+  -# card information
+  .row 
+    .col-lg-4.col-lg-3.col-md-5
+      %img.card-img-top{src: @card['image_uris']['normal'],style: 'border-radius:4%;'}
+    .col-md-7
+      %row 
+        %span
+          %i{class: "ss ss-#{@card['set']} ss-#{@card['rarity']} ss-2x ss-fw"}
+          %strong=@card['name']
+        %span{style: 'float:right;'} 
+          -@card_mana = reformat_mana_costs(@card)
+          -@card_mana.each do |cmc| 
+            %i{class: "ms ms-#{cmc} ms-cost ms-shadow ms-2x"}
+      %br
+      %i{style: 'font-size:10px;'}=@card['flavor_text']
+      %div 
+        %br
+        %hr
+      .row
+        .col-md-6
+          %table
+            %tbody.legalities 
+              -@card['legalities'].each do |k,v| 
+                %tr
+                  %td="#{k.capitalize}"
+                  %td
+                    %button{class: "btn btn-sm btn-#{legal_label(v)} disabled"}="#{v.upcase.gsub('_',' ')}"
+        .col-md-5.align-bottom{style: 'border:1px solid lightblue;height:90px;background:#cefdff;'} 
+          -haml_concat 'Inventory' " #{inventory(@card)}"
+          %br{style:'margin:12px;'}
+          -haml_concat 'Total' + " $#{@card['prices']['usd']}"
+          -# -haml_concat 'Total' +
+          %br
+          %br 
+          %br
+          -unless current_user 
+            %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} -
+            %span{style: 'padding-right: 1px;'}
+            %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} +
+            %span{style: 'padding-right: 1px;'}
+            %button.btn.btn-outline-secondary.btn-sm.disabled 0 
+            %span{style: 'padding-right: 1px;'}
+            %a.btn.btn-secondary.btn-sm.disabled{tabindex: '-1', role: 'button', :'aria-disabled' => 'true'} delete
+            %span{style: 'padding-right: 1px;'}
+            -unless @card['prices']['usd'].to_i.zero?
+              %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{@card['prices']['usd']}"
+            -else 
+              %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}='$0.00'
+          -else
+            %form{method: 'post', action: '/decrement_counter', style: 'padding:1.5px'}
+              %input#decrement.button.button.btn.btn-secondary.btn-sm.btn-info{type: 'submit', scryfall_id: "#{@card['id']}", quantity: "#{quantity_counter(@card)}", value: '-'}
+            %form{method: 'post', action: '/increment_counter', style: 'padding:1.5px;'}
+              %input#increment.button.button.btn.btn-secondary.btn-sm.btn-success{type: 'submit', scryfall_id: "#{@card['id']}", quantity: "#{quantity_counter(@card)}", value: '+'}
+            %form{style: 'padding:1.5px;'}  
+              %button.btn.btn-outline-secondary.btn-sm.disabled{id: "#{@card['id']}"}=quantity_counter(@card)
+            %form{method: 'delete', action: '/delete', style: 'padding:1.5px;'}
+              %input#destroy.button.button.btn.btn-secondary.btn-sm.btn-danger{type: 'submit', scryfall_id: "#{@card['id']}", value: 'destroy'}
+            %form{style:'padding:1.5px;'}
+              %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{@card['prices']['usd']}" 
+              %br
+              -# testing end here 
+  %br 
+  %br
+  -# reprints, rulings
+  -# todo partial reprints
+  %i{style:'color:grey;'} Prints 
+  %span
+    %i{style:'color:grey;'}=count_reprints(@reprints)
+  %hr 
+  -if @reprints['total_cards'] > 1 
+    -@reprints['data'].each do |reprint|
+      %a{href: "/sets/#{reprint['set']}/card/#{reprint['collector_number']}"}
+        %img.card-image-top{src: reprint['image_uris']['normal'], style: 'width:18.5%; margin:5px; border-radius:4%;'}
+  %br 
+  %br
+  -# todo partial rulings 
+  %i{style:'color:grey;'}="Notes for #{@card['name']}"
+  %span 
+    %i{style:'color:grey;'}=count_rulings(@card)
+  %hr
+  -if @rulings 
+    .container 
+      .row
+        -@rulings.each do |rule|
+          .col-md-6
+            %br
+            %span="#{rule['comment']}"
+            %br
+              %i{style:'color:grey;'}="#{rule['published_at']}"

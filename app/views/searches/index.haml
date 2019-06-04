@@ -1,0 +1,12 @@
+-# https://img.scryfall.com/cards/large/en/ima/10.jpg?1530591620 
+-# todo image validation (ie image faces)
+.col-sm-12
+  %nav.nav.navbar-light{style: 'background: linear-gradient(to left, transparent, #F7F7F7); border-radius: 6%; padding: inherit;'}
+    %span.navbar-brand{style: 'font-size: small; color: grey;'}="#{@cards.count} cards where name includes \"#{@query}\""
+  %br
+  .row.justify-content-left{style: 'padding-left: 15px;'}
+    -@cards.each do |card| 
+      .card-deck
+        .col{style: 'margin: 5px;'}
+          %a{href: "/sets/#{card['set']}/card/#{card['collector_number']}", style: 'text-align: center;'}
+            %img.img-responsive{src: card['image_uris']['normal'], style: 'max-width: 17em;'}

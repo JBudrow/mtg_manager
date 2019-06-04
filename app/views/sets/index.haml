@@ -1,0 +1,61 @@
+-# %div.container{style: 'padding-top:5em;'}
+-#   %table.table.table-striped.table-hover
+-#     %thead 
+-#       %th{scope: 'col', style: "font-size: small; border: none;"} NAME 
+-#       %th{scope: 'col', style: "font-size: small; border: none;"} BLOCK
+-#       %th{scope: 'col', style: "font-size: small; border: none;"} CARDS 
+-#       %th{scope: 'col', style: "font-size: small; border: none;"} VALUE
+-#       %th{scope: 'col', style: "font-size: small; border: none;"} DATE 
+-#     %tbody
+-#       -@sets.first(10).each do |set|
+-#         -next if set['card_count'] == 0 
+-#         %tr{onclick: "window.location='/sets/#{set['code']}'", style: 'cursor: pointer;'}  
+-#           %td
+-#             %img{src: set['icon_svg_uri'], style: 'height:1.5rem; padding-right: 5px; max-width: 19px;'}
+-#             -# -haml_concat "#{set['name']} (#{set['code']})"
+-#             %span=set['name']
+-#             %span 
+-#               %b{style: 'font-size: smaller;'}="(#{set['code'].upcase})"
+-#           -unless set['block'].blank?
+-#             %td{style: 'color:#000'}=set['block']
+-#           -else 
+-#             %td •
+-#           %td=set['card_count']
+-#           %td=set_currency(set)
+-#           -unless set['released_at'].blank? 
+-#             %td=set['released_at']
+-#           -else 
+-#             %td •
+-#   %div.pagination{style: 'float:right; margin-top:10px;'}
+-#     =will_paginate(@sets, :container => false)
+%div.container
+  %table.table.table-striped.table-hover
+    %thead 
+      %th{scope: 'col', style: "font-size: small; border: none;"} NAME 
+      %th{scope: 'col', style: "font-size: small; border: none;"} BLOCK
+      %th{scope: 'col', style: "font-size: small; border: none;"} CARDS 
+      %th{scope: 'col', style: "font-size: small; border: none;"} VALUE
+      %th{scope: 'col', style: "font-size: small; border: none;"} RELEASE
+    %tbody
+      -@sets.first(30).each do |set|
+        -# -next if set['card_count'] == 0 
+        -# params are not being passed in
+        -# wrong number of args to httparty
+        %tr{onclick: "window.location='/sets/#{set['code']}'", style: 'cursor: pointer;'} 
+          %td
+            %img{src: set['icon_svg_uri'], style: 'height:1.5rem; padding-right: 5px; max-width: 19px;'}
+            -# -haml_concat "#{set['name']} (#{set['code']})"
+            %span=set['name']
+            %span{style: 'font-size: smaller; color: grey'}="(#{set['code'].upcase})"
+          -unless set['block'].blank?
+            %td{style: 'color:#000'}=set['block']
+          -else 
+            %td 
+          %td=set['card_count']
+          %td=set_currency(set)
+          -unless set['released_at'].blank? 
+            %td=set['released_at']
+          -else 
+            %td 
+  %div.pagination{style: 'float:right; margin-top:10px;'}
+    =will_paginate(@sets, :container => false)

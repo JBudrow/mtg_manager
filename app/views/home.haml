@@ -1,0 +1,11 @@
+%h3 layout#home 
+-if current_user && current_user.cards.any? 
+  .card-deck{style: 'width:100%;'}
+    .offset-md-1
+    -#TODO last added 
+    -current_user.cards.first(5).each do |card|
+      .col-md-2
+        %a{href: "/sets/#{card['set']}/card/#{card['collector_number']}"}
+          %img.card-img-top.img-responsive{src: card[:uris]['image_uri'], style: 'width:16em; border-radius: 4%; padding:1rem;'}
+-else 
+  =haml :'shared/200'

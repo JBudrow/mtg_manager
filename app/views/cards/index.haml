@@ -1,0 +1,54 @@
+.col-sm-12
+  %nav.nav.navbar-light{style: 'background: linear-gradient(to left, transparent, #F7F7F7); border-radius: 6%; padding: inherit;'}
+    %span.navbar-brand{style: 'font-size: small; color: grey;'} RECENTLY ADDED
+  %br
+  .row.justify-content-center
+    -@cards.first(10).each do |card| 
+      .card-deck
+        -# `height` property sides with .cody-body temporarily 
+        -# unless a .card-body is needed
+        .card{style: 'margin: 0 20px 15px 20px; height: 26.75em;'}
+          %a{href: "/sets/#{card['set']}/card/#{card['collector_number']}"}
+            %img.img-responsive{src: card.uris['image_uri'], style: 'max-width: 17em;'}
+          -# .card-body 
+          -#   %form{style:'padding:1.5px;'}
+              -# %button.btn.btn-outline-secondary.btn-sm.disabled{onclick: 'return false'}="$#{card['prices']['usd']}"
+              -# %button.btn.btn-outline-secondary.btn-sm.disabled{onClick: 'return false'}=card.price
+          .card-footer{style: 'text-align: center;'}
+            %small.text-muted="UPDATED ON #{card.updated_on}"
+  %br 
+  %div.container{style: 'padding-top:5em;'}
+    %table.table.table-striped.table-hover
+      %thead 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} NAME 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} BLOCK
+        %th{scope: 'col', style: 'font-size: small; border: none;'} CMC
+        -# todo prepend quantity and span elements of (+ -) end of tr
+        %th{scope: 'col', style: 'font-size: small; border: none;'} QUANTITY 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} VALUE 
+        %th{scope: 'col', style: 'font-size: small; border: none;'} UPDATED ON
+        %th{scope: 'col', style: 'font-size: small; border: none;'} CREATED ON
+      %tbody
+        -@cards.each do |card|
+          %tr{onclick: "window.location='/sets/#{card.set}/card/#{card.collector_number}", 
+              style: 'cursor: pointer;'}
+            %td
+              %i{class: "ss ss-#{card.set} ss-#{card.rarity} ss-fw ss-2x"}
+              =card.name
+            -# -if card.set_name
+            -#   %td{style: 'color:#000'}=card.set_name
+            -#     %b{style: 'font-size: smaller;'}="(#{card.set.upcase})"
+            -# -else 
+            -#   %td •
+            %td
+              =card.set_name
+              %span{style: 'font-size: smaller; color: grey; vertical-align: 1px;'}="(#{card.set.upcase})"
+            -card_mana = reformat_mana_costs(card)
+            %td
+              -card_mana.each do |cmc| 
+                %i{class: "ms ms-#{cmc} ms-cost ms-shadow ms-1x"}
+            -# %td=reformat_mana_costs(card)
+            %td=card.quantity
+            %td=multiply_user_quantity(card)
+            %td=card.updated_on
+            %td=card.created_on
