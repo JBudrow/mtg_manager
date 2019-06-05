@@ -37,6 +37,10 @@ gem 'json', '~> 1.8.6'
 gem 'rake'
 # A Ruby/Rack web server built for concurrency
 gem 'puma'
+# Manage Procfile-based applications
+gem 'foreman'
+# Redis-backed Ruby library for creating background jobs, placing them on multiple queues, and processing them later
+gem 'resque'
 # A Ruby Library for dealing with money and currency conversion
 gem 'money'
 # Pagination library for Rails, Sinatra, Merb, DataMapper, and more

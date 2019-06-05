@@ -3,7 +3,7 @@ Bundler.require()
 
 require 'rubygems'
 require './config/environment'
-require './config/puma'
+# require './config/puma'
 
 DataMapper.finalize
 DataMapper.auto_upgrade!

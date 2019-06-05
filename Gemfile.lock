@@ -87,6 +87,7 @@ GEM
       dm-core (~> 1.2.0)
     do_postgres (0.10.17)
       data_objects (= 0.10.17)
+    dotenv (0.7.0)
     factory_bot (4.11.0)
       activesupport (>= 3.0.0)
     fastercsv (1.5.5)
@@ -94,6 +95,9 @@ GEM
       colorize (~> 0.7)
       ruby_parser (~> 3.11.0)
     ffi (1.9.25)
+    foreman (0.64.0)
+      dotenv (~> 0.7.0)
+      thor (>= 0.13.6)
     formatador (0.2.5)
     guard (2.14.2)
       formatador (>= 0.2.4)
@@ -128,6 +132,7 @@ GEM
     minitest (5.11.3)
     money (6.12.0)
       i18n (>= 0.6.4, < 1.1)
+    mono_logger (1.1.0)
     multi_json (1.13.1)
     multi_xml (0.6.0)
     mustermann (1.0.3)
@@ -152,7 +157,15 @@ GEM
       ffi (>= 0.5.0, < 2)
     rb-readline (0.5.5)
     redis (4.1.1)
+    redis-namespace (1.6.0)
+      redis (>= 3.0.4)
     require_all (2.0.0)
+    resque (2.0.0)
+      mono_logger (~> 1.0)
+      multi_json (~> 1.0)
+      redis-namespace (~> 1.6)
+      sinatra (>= 0.9.2)
+      vegas (~> 0.1.2)
     ripl (0.7.1)
       bond (~> 0.5.1)
     ripl-multi_line (0.3.1)
@@ -217,6 +230,8 @@ GEM
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uuidtools (2.1.5)
+    vegas (0.1.11)
+      rack (>= 1.0.0)
     webmock (3.4.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -236,6 +251,7 @@ DEPENDENCIES
   dm-postgres-adapter
   factory_bot
   fasterer
+  foreman
   guard
   guard-rspec
   haml
@@ -250,6 +266,7 @@ DEPENDENCIES
   rb-readline
   redis
   require_all
+  resque
   rspec
   shotgun
   sinatra

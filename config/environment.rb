@@ -11,6 +11,8 @@ require 'dm-postgres-adapter'
 require 'dm-pg-types'
 require 'dm-timestamps'
 require 'dm-migrations'
+require 'puma'
+require 'resque/server'
 require 'require_all'
 
 configure :production, :development do 
