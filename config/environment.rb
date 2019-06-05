@@ -10,6 +10,7 @@ require 'will_paginate/view_helpers/sinatra'
 require 'dm-postgres-adapter'
 require 'dm-pg-types'
 require 'dm-timestamps'
+require 'dm-migrations'
 require 'require_all'
 
 configure :production, :development do 
@@ -17,11 +18,11 @@ configure :production, :development do
 end 
 
 configure :production do
-  DataMapper.setup(:default, 'postgres://localhost/mtg_manager_production')
+  DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mtg_manager_production')
 end
 
 configure :development do
-  DataMapper.setup(:default, 'postgres://localhost/mtg_manager_development')
+  DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mtg_manager_development')
 end
 
 configure :test do
